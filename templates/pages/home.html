@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block head_title %}
+Home
+{% endblock head_title %}
+
+{% block content %}
+Welcome to tweet me!
+
+<div id="tweets">
+    Loading...
+</div>
+
+
+<script>
+const tweetsElement = document.getElementById('tweets') // Get an HTML element
+
+// Function to format the tweets 
+const formatTweetElement = tweet => {
+    let formattedTweet =`<div class='mb-4 tweet' id='tweet-${tweet.id}'><p>${tweet.content}</p></div>`
+    return formattedTweet
+}
+const xhr = new XMLHttpRequest() 
+const method = 'GET' // opposed to POST
+const url = '/tweets'
+const responseType = 'json'
+
+xhr.responseType = responseType
+xhr.open(method, url)
+xhr.onload = function(){
+    const serverResponse = xhr.response
+    const listedItems = serverResponse.response // Array - Need to loop through it
+    let finalStr = ""
+    let i;
+    for (i=0; i<listedItems.length; i++) {
+        let tweetObj = listedItems[i]
+        let currentItem = formatTweetElement(tweetObj)
+            finalStr += currentItem
+    }
+    tweetsElement.innerHTML = finalStr 
+}
+xhr.send()
+
+
+
+
+</script>
+{% endblock content %}
